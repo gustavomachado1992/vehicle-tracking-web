@@ -10,14 +10,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatButton} from "@angular/material/button";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { MatCard, MatCardContent } from "@angular/material/card";
+import {vehicleTrackingPlace} from "./core/models/vehicles-tracking-place";
 
-export interface vehicleTracking {
-  plate: string;
-  time: Number;
-  place: string;
-}
 
-const VEHICLE: vehicleTracking[] = [
+const VEHICLE: vehicleTrackingPlace[] = [
   { time: 1, plate: 'Alice', place: 'Floripa' },
   { time: 2, plate: 'Bob', place: 'São José' }
 ];
@@ -44,7 +40,7 @@ const VEHICLE: vehicleTracking[] = [
 })
 export class AppComponent {
   displayedColumns: string[] = ['plate', 'time', 'place'];
-  dataSource = new MatTableDataSource<vehicleTracking>(VEHICLE);
+  dataSource = new MatTableDataSource<vehicleTrackingPlace>(VEHICLE);
 
   form: FormGroup;
 
