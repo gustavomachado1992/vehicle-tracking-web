@@ -1,15 +1,15 @@
-import {Component, ViewChild} from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatSelectModule} from "@angular/material/select";
 import { CommonModule } from '@angular/common';
-import {MatNativeDateModule} from "@angular/material/core";
-import {MatInputModule} from "@angular/material/input";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatDatepickerModule} from "@angular/material/datepicker";
-import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
-import {MatButton} from "@angular/material/button";
-import {MatTableDataSource, MatTableModule} from "@angular/material/table";
-import {MatCard, MatCardContent} from "@angular/material/card";
+import { MatNativeDateModule } from "@angular/material/core";
+import { MatInputModule } from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { MatButton} from "@angular/material/button";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { MatCard, MatCardContent } from "@angular/material/card";
 
 export interface vehicleTracking {
   plate: string;
