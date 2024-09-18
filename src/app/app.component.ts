@@ -11,7 +11,8 @@ import { MatButton} from "@angular/material/button";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { MatCard, MatCardContent } from "@angular/material/card";
 import {vehicleTrackingPlace} from "./core/models/vehicles-tracking-place";
-
+import {VehicleTrackingService} from "./core/services/vehicle-tracking.service";
+import {VehiclesPosition} from "./core/models/vehicles";
 
 const VEHICLE: vehicleTrackingPlace[] = [
   { time: 1, plate: 'Alice', place: 'Floripa' },
@@ -35,6 +36,7 @@ const VEHICLE: vehicleTrackingPlace[] = [
     MatCard,
     MatCardContent
   ],
+  providers: [VehicleTrackingService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -43,22 +45,34 @@ export class AppComponent {
   dataSource = new MatTableDataSource<vehicleTrackingPlace>(VEHICLE);
 
   form: FormGroup;
+  listPlates?: string[] = [];
+  listCarsPosition?: VehiclesPosition[];
 
-  options = [
-    { value: 'option1' },
-    { value: 'option2'},
-    { value: 'option3'}
-  ];
-
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private vehicleTrackingService: VehicleTrackingService,
+  ) {
     this.form = this.fb.group({
       selectedOption: [null],
       selectedDate: [null]
     });
+    this.loadPlates();
   }
+  loadPlates() {
+    this.vehicleTrackingService.listVehiclesPlate().subscribe(data => {
+      this.listPlates = data;
+    });
+  }
+  filterCar() {
+    const {selectedOption, selectedDate } = this.form.value;
 
+    this.vehicleTrackingService.listVehiclesFilter(selectedOption, selectedDate).subscribe(data => {
+      this.listCarsPosition = data;
+    });
+  }
   onSubmit() {
     console.log('Form Submitted:', this.form.value);
+    this.filterCar()
   }
 
 }

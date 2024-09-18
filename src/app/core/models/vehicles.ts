@@ -1,6 +1,6 @@
-export interface Vehicles {
+export interface VehiclesPosition {
   placa: string;
-  Data_posicao: Date;
+  data: Date;
   velocidade: number;
   longitude: number;
   latitude: number;

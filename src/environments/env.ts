@@ -1,5 +1,3 @@
-// TODO change URI_API to localhost or to your IP if testing locally
-import {TokenService} from '../app/core/services/auth/token.service';
 
 export const env = {
     dev: true,
