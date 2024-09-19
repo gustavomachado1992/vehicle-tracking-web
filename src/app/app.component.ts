@@ -8,16 +8,11 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatButton} from "@angular/material/button";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { MatTableModule } from "@angular/material/table";
 import { MatCard, MatCardContent } from "@angular/material/card";
-import {vehicleTrackingPlace} from "./core/models/vehicles-tracking-place";
+import {VehicleTrackingPlace} from "./core/models/vehicles-tracking-place";
 import {VehicleTrackingService} from "./core/services/vehicle-tracking.service";
-import {VehiclesPosition} from "./core/models/vehicles";
 
-const VEHICLE: vehicleTrackingPlace[] = [
-  { time: 1, plate: 'Alice', place: 'Floripa' },
-  { time: 2, plate: 'Bob', place: 'São José' }
-];
 
 @Component({
   selector: 'app-root',
@@ -41,12 +36,12 @@ const VEHICLE: vehicleTrackingPlace[] = [
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  displayedColumns: string[] = ['plate', 'time', 'place'];
-  dataSource = new MatTableDataSource<vehicleTrackingPlace>(VEHICLE);
-
+  displayedColumns: string[] = ['placa', 'tempo', 'poi'];
+  dataSource: VehicleTrackingPlace[] = [];
   form: FormGroup;
   listPlates?: string[] = [];
-  listCarsPosition?: VehiclesPosition[];
+  isLoading: boolean = false;
+  error: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -57,22 +52,61 @@ export class AppComponent {
       selectedDate: [null]
     });
     this.loadPlates();
+    this.listPoiTracking();
   }
-  loadPlates() {
-    this.vehicleTrackingService.listVehiclesPlate().subscribe(data => {
-      this.listPlates = data;
+  loadPlates(): void {
+
+    this.isLoading = true;
+    this.error = null;
+
+    this.vehicleTrackingService.listVehiclesPlate().subscribe({
+      next: (data: string[]) => this.listPlates = data || [],
+      error: (err) => {
+        this.isLoading = false
+        console.error('Erro ao carregar Placas', err);
+        this.error = 'Falha ao carregar Placas, Por favor tente mais tarde.';
+      },
+      complete: () => this.isLoading = false
     });
   }
-  filterCar() {
-    const {selectedOption, selectedDate } = this.form.value;
 
-    this.vehicleTrackingService.listVehiclesFilter(selectedOption, selectedDate).subscribe(data => {
-      this.listCarsPosition = data;
+  listPoiTracking() {
+    const {selectedOption, selectedDate} = this.form.value;
+
+    this.isLoading = true;
+    this.error = null;
+
+    this.vehicleTrackingService.listVehiclesFilter(selectedOption, selectedDate).subscribe({
+      next: (data: VehicleTrackingPlace[]) => {
+        this.dataSource = data || [];
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Erro ao buscar dados de rastreamento do veículo:', err);
+        this.error = 'Falha ao carregar posições do veículo. Tente novamente mais tarde.';
+      },
+      complete: () => this.isLoading = false
     });
   }
-  onSubmit() {
-    console.log('Form Submitted:', this.form.value);
-    this.filterCar()
-  }
 
+  onSubmit() { this.listPoiTracking() }
+
+  convertToTime(minutes: number) {
+    const days = Math.floor(minutes / (24 * 60));
+    const hours = Math.floor((minutes % (24 * 60)) / 60);
+    const remainingMinutes = minutes % 60;
+
+    let result = days > 0 ? `${days} dia${days > 1 ? 's' : ''}` : '';
+
+    if (hours > 0) {
+      if (result) result += ', ';
+      result += `${hours} hora${hours > 1 ? 's' : ''}`;
+    }
+    if (remainingMinutes > 0 || !result) {
+      if (result) result += ', ';
+      result += `${remainingMinutes} minuto${remainingMinutes > 1 ? 's' : ''}`;
+    }
+
+    return result;
+  }
 }

@@ -1,7 +1,8 @@
 .content {
   display: flex;
   justify-content: center;
-
+  max-width: 450px;
+  width: 450px;
 }
 .container-form {
   margin: 20px;
@@ -10,5 +11,16 @@ mat-form-field {
   width: 100%;
 }
 button {
+  width: 100%;
+}
+.loading {
+  color: #727272;
+  padding-bottom: 5px;
+}
+.error {
+  color: rgba(165, 26, 26, 0.89);
+  padding-bottom: 5px;
+}
+mat-card {
   width: 100%;
 }

@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {env} from "../../../environments/env";
-import {VehiclesPosition} from "../models/vehicles";
 import {format} from "date-fns";
+import {VehicleTrackingPlace} from "../models/vehicles-tracking-place";
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +16,16 @@ export class VehicleTrackingService {
   }
 
   listVehiclesFilter(plate: string, date: Date) {
-    const formattedDate = this.formatDateForURL(date);
-
-    return this.http.get<any>(
-      '/api/posicao?placa=TESTE001&data=12%2F16%2F2018'
+    const formattedDate = date ? format(date, 'MM-dd-yyyy') : date;
+    let queryParams = ''
+    if (plate) {
+      queryParams += `placa=${plate}`
+    }
+    if (formattedDate) {
+      queryParams += queryParams ? `&data=${formattedDate}` : 'data=' + formattedDate;
+    }
+    return this.http.get<VehicleTrackingPlace[]>(
+      `${env.URI}/position${queryParams ? `?${queryParams}` : ''}`
     );
-  }
-  formatDateForURL(date: Date) {
-    const formattedDate = format(date, 'MM/dd/yyyy');
-    return encodeURIComponent(formattedDate);
   }
 }

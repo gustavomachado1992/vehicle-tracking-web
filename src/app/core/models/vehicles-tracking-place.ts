@@ -1,5 +1,5 @@
-export interface vehicleTrackingPlace {
-  plate: string;
-  time: Number;
-  place: string;
+export interface VehicleTrackingPlace {
+  placa: string;
+  poi: string;
+  tempo: number;
 }

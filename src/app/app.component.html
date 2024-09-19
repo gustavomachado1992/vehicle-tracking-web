@@ -6,7 +6,7 @@
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div>
               <mat-form-field appearance="outline">
-                <mat-label>Escolha uma opção</mat-label>
+                <mat-label>Escolha uma Placa</mat-label>
                 <mat-select formControlName="selectedOption">
                   <mat-option *ngFor="let option of listPlates" [value]="option">
                     {{ option }}
@@ -23,30 +23,33 @@
               </mat-form-field>
             </div>
             <div>
-              <button mat-stroked-button color="primary" type="submit">Filtrar</button>
+              <button mat-stroked-button color="primary" type="submit">Buscar</button>
             </div>
 
           </form>
           <br>
-          <p>filtro: {{ form.value | json }}</p>
         </div>
         <div class="container-list">
           <div class="table-container">
+            <div>
+              <div class="loading" *ngIf="isLoading">Carregando...</div>
+              <div class="error" *ngIf="error">{{ error }}</div>
+            </div>
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-              <ng-container matColumnDef="plate">
+              <ng-container matColumnDef="placa">
                 <th mat-header-cell *matHeaderCellDef> Placa </th>
-                <td mat-cell *matCellDef="let vehicle"> {{vehicle.plate}} </td>
+                <td mat-cell *matCellDef="let vehicle"> {{vehicle.placa}} </td>
               </ng-container>
 
-              <ng-container matColumnDef="time">
+              <ng-container matColumnDef="tempo">
                 <th mat-header-cell *matHeaderCellDef> Tempo </th>
-                <td mat-cell *matCellDef="let vehicle"> {{vehicle.time}} </td>
+                <td mat-cell *matCellDef="let vehicle"> {{convertToTime(vehicle.tempo)}} </td>
               </ng-container>
 
-              <ng-container matColumnDef="place">
+              <ng-container matColumnDef="poi">
                 <th mat-header-cell *matHeaderCellDef> Lugar </th>
-                <td mat-cell *matCellDef="let vehicle"> {{vehicle.place}} </td>
+                <td mat-cell *matCellDef="let vehicle"> {{vehicle.poi}} </td>
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
